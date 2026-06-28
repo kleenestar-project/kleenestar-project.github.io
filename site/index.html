@@ -1,0 +1,1090 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KleeneStar - Modular Platform for Knowledge, Processes and Collaboration</title>
+  <meta name="description" content="KleeneStar is a modular, multi-tenant open source platform for knowledge management, process tracking and collaborative ecosystems. Built on the WebExpress framework.">
+  <style>
+    /* ==========================================================
+       BRAND TOKENS
+       ========================================================== */
+    :root {
+      --bg: #ffffff;
+      --bg-soft: #fff8f0;
+      --bg-card: #ffffff;
+
+      --orange: #f47b20;
+      --orange-dark: #e06812;
+      --orange-deep: #c4580a;
+      --orange-soft: rgba(244, 123, 32, 0.10);
+
+      --teal: #1e8080;
+      --teal-soft: rgba(30, 128, 128, 0.10);
+      --magenta: #b83bc9;
+      --magenta-soft: rgba(184, 59, 201, 0.10);
+      --yellow: #fbcb3a;
+      --yellow-soft: rgba(251, 203, 58, 0.18);
+      --green: #2ea876;
+      --green-soft: rgba(46, 168, 118, 0.12);
+
+      --ink: #1a1a1a;
+      --ink-mid: #4a4a4a;
+      --ink-soft: #767676;
+
+      --line: #f0e6d6;
+      --line-soft: #faf3e8;
+
+      --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI",
+                   Roboto, "Helvetica Neue", Arial, sans-serif;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: var(--font-sans);
+      background: var(--bg);
+      color: var(--ink);
+      line-height: 1.6;
+      font-size: 16px;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    .container {
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* ==========================================================
+       HEADER
+       ========================================================== */
+    header.site-header {
+      padding: 18px 0;
+      border-bottom: 1px solid var(--line-soft);
+      position: sticky;
+      top: 0;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(6px);
+      z-index: 50;
+    }
+    .header-inner {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--ink);
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 17px;
+      letter-spacing: -0.01em;
+    }
+    .brand-mark { width: 30px; height: 30px; }
+    nav.main-nav a {
+      color: var(--ink-mid);
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 500;
+      margin-left: 24px;
+      transition: color .15s;
+    }
+    nav.main-nav a:hover { color: var(--orange); }
+
+    /* ==========================================================
+       HERO
+       ========================================================== */
+    .hero {
+      background: var(--orange);
+      color: white;
+      padding: 80px 0 70px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: "";
+      position: absolute;
+      inset: -50%;
+      background:
+        radial-gradient(ellipse at 25% 35%, var(--orange-dark) 0%, transparent 30%),
+        radial-gradient(ellipse at 75% 65%, var(--orange-deep) 0%, transparent 30%),
+        radial-gradient(ellipse at 50% 50%, var(--orange-dark) 0%, transparent 35%);
+      opacity: 0.55;
+      animation: gradient-rotate 28s linear infinite;
+      z-index: 0;
+    }
+    .hero-inner { position: relative; z-index: 2; }
+    /* Hero content is non-interactive so hovering through it still triggers petals behind */
+    .hero-inner > * { pointer-events: none; }
+    .hero-inner .btn { pointer-events: auto; }
+
+    .hero-illustration {
+      max-width: 380px;
+      margin: 0 auto 32px;
+      filter: drop-shadow(0 12px 32px rgba(0, 0, 0, 0.18));
+      display: block;
+      animation: breathe 7s ease-in-out infinite;
+      position: relative;
+      z-index: 3;
+    }
+    @keyframes breathe {
+      0%, 100% { transform: translateY(0) scale(1); }
+      50%      { transform: translateY(-8px) scale(1.015); }
+    }
+    @keyframes gradient-rotate {
+      from { transform: rotate(0deg); }
+      to   { transform: rotate(360deg); }
+    }
+
+    /* Floating petals container */
+    .hero-petals {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+      pointer-events: none;
+      z-index: 1;
+    }
+    .petal {
+      position: absolute;
+      bottom: -60px;
+      opacity: 0;
+      will-change: transform, opacity;
+    }
+    .petal svg { display: block; width: 100%; height: 100%; }
+    .petal.p1 { left:  8%; width: 28px; height: 44px; color: rgba(255, 255, 255, 0.85); animation: float-up 18s linear infinite  0s; }
+    .petal.p2 { left: 22%; width: 24px; height: 36px; color: var(--teal);             animation: float-up-2 22s linear infinite  4s; }
+    .petal.p3 { left: 38%; width: 18px; height: 18px; color: var(--yellow);          animation: float-up 15s linear infinite  8s; }
+    .petal.p4 { left: 55%; width: 32px; height: 50px; color: rgba(255, 255, 255, 0.7); animation: float-up 21s linear infinite  2s; }
+    .petal.p5 { left: 72%; width: 16px; height: 16px; color: var(--magenta);        animation: float-up-2 17s linear infinite  6s; }
+    .petal.p6 { left: 88%; width: 26px; height: 40px; color: var(--teal);            animation: float-up-2 24s linear infinite 11s; }
+    @keyframes float-up {
+      0%   { transform: translate3d(0, 0, 0) rotate(0deg); opacity: 0; }
+      8%   { opacity: 0.9; }
+      50%  { transform: translate3d(30px, -50vh, 0) rotate(180deg); opacity: 0.9; }
+      92%  { opacity: 0.9; }
+      100% { transform: translate3d(-20px, -120vh, 0) rotate(360deg); opacity: 0; }
+    }
+    @keyframes float-up-2 {
+      0%   { transform: translate3d(0, 0, 0) rotate(0deg); opacity: 0; }
+      10%  { opacity: 0.7; }
+      50%  { transform: translate3d(-40px, -50vh, 0) rotate(-180deg); opacity: 0.7; }
+      90%  { opacity: 0.7; }
+      100% { transform: translate3d(30px, -120vh, 0) rotate(-360deg); opacity: 0; }
+    }
+
+    /* Interactive petals: enable pointer events, cursor, burst state */
+    .petal {
+      pointer-events: auto;
+      cursor: pointer;
+    }
+    /* Petals are destroyed on burst: hide + scale down, then respawn */
+    .petal.burst {
+      opacity: 0 !important;
+      transform: scale(0.4) !important;
+      transition: opacity 0.15s ease, transform 0.15s ease;
+    }
+
+    /* Burst particles */
+    .burst-dot {
+      position: fixed;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 9999;
+      transform: translate(-50%, -50%);
+      animation: burst-fly 0.75s cubic-bezier(0.18, 0.89, 0.32, 1.28) forwards;
+    }
+    @keyframes burst-fly {
+      0%   { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+      60%  { opacity: 1; }
+      100% { transform: translate(calc(-50% + var(--tx)), calc(-50% - 130px)) scale(0.3); opacity: 0; }
+    }
+
+    /* Counter */
+    .petal-counter {
+      position: absolute;
+      top: 18px;
+      right: 24px;
+      background: rgba(255, 255, 255, 0.95);
+      color: var(--orange-deep);
+      padding: 7px 14px;
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: 700;
+      z-index: 5;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-variant-numeric: tabular-nums;
+      letter-spacing: 0.03em;
+      transition: opacity 0.3s ease, transform 0.15s ease;
+      backdrop-filter: blur(6px);
+      opacity: 1;
+    }
+    .petal-counter.hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+    .petal-counter.pulse {
+      animation: counter-pulse 0.45s ease-out;
+    }
+    @keyframes counter-pulse {
+      0%   { transform: scale(1); }
+      40%  { transform: scale(1.35); }
+      100% { transform: scale(1); }
+    }
+    .petal-counter svg {
+      width: 14px;
+      height: 14px;
+      color: var(--orange);
+    }
+
+    /* Respect reduced motion preferences */
+    @media (prefers-reduced-motion: reduce) {
+      .hero::before,
+      .hero-illustration,
+      .petal,
+      .burst-dot,
+      .petal-counter.pulse {
+        animation: none !important;
+      }
+      .petal { display: none; }
+      .burst-dot { display: none; }
+    }
+
+    .hero h1 {
+      font-family: var(--font-sans);
+      font-weight: 800;
+      font-size: clamp(34px, 5.5vw, 56px);
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+      margin-bottom: 18px;
+    }
+    .hero p {
+      font-size: 18px;
+      line-height: 1.55;
+      color: rgba(255, 255, 255, 0.95);
+      max-width: 620px;
+      margin: 0 auto 32px;
+    }
+    .hero-ctas {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 22px;
+      border-radius: 8px;
+      font-family: inherit;
+      font-size: 15px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all .2s ease;
+      cursor: pointer;
+      border: 0;
+    }
+    .btn-light {
+      background: white;
+      color: var(--orange-deep);
+    }
+    .btn-light:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 10px 20px -8px rgba(0,0,0,0.3);
+    }
+    .btn-outline {
+      background: transparent;
+      color: white;
+      border: 2px solid rgba(255, 255, 255, 0.4);
+    }
+    .btn-outline:hover {
+      background: rgba(255, 255, 255, 0.12);
+      border-color: rgba(255, 255, 255, 0.7);
+    }
+    .btn-icon { width: 17px; height: 17px; }
+
+    /* ==========================================================
+       SECTIONS
+       ========================================================== */
+    section {
+      padding: 64px 0;
+      border-bottom: 1px solid var(--line-soft);
+    }
+    section:last-of-type { border-bottom: 0; }
+    section h2 {
+      font-family: var(--font-sans);
+      font-weight: 700;
+      font-size: clamp(24px, 3vw, 32px);
+      letter-spacing: -0.015em;
+      margin-bottom: 16px;
+      color: var(--ink);
+    }
+    section .lead {
+      font-size: 17px;
+      color: var(--ink-mid);
+      margin-bottom: 36px;
+      max-width: 700px;
+    }
+    section p { margin-bottom: 8px; color: var(--ink-mid); }
+
+    /* ==========================================================
+       ARCHITECTURE
+       ========================================================== */
+    .arch-diagram {
+      background: var(--bg-soft);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 28px;
+      margin-bottom: 24px;
+    }
+    .arch-layer {
+      background: white;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 16px 20px;
+      margin-bottom: 8px;
+    }
+    .arch-layer:last-child { margin-bottom: 0; }
+    .arch-layer-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .arch-layer-title {
+      font-weight: 700;
+      font-size: 15px;
+      color: var(--ink);
+    }
+    .arch-layer-desc {
+      font-size: 13px;
+      color: var(--ink-soft);
+      margin-top: 4px;
+    }
+    .arch-layer-chips {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      padding: 3px 10px;
+      background: var(--orange-soft);
+      color: var(--orange);
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 600;
+    }
+    .chip.teal { background: var(--teal-soft); color: var(--teal); }
+    .chip.magenta { background: var(--magenta-soft); color: var(--magenta); }
+    .chip.yellow { background: var(--yellow-soft); color: #b48708; }
+    .chip.green { background: var(--green-soft); color: var(--green); }
+    .arch-connector {
+      text-align: center;
+      color: var(--ink-soft);
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      padding: 4px 0;
+      font-weight: 600;
+    }
+
+    /* ==========================================================
+       MODULES
+       ========================================================== */
+    .modules {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+    }
+    .module {
+      background: var(--bg-soft);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 22px;
+      transition: all .2s ease;
+    }
+    .module:hover {
+      border-color: var(--orange);
+      transform: translateY(-2px);
+      box-shadow: 0 12px 24px -12px rgba(244, 123, 32, 0.2);
+    }
+    .module-icon {
+      width: 40px; height: 40px;
+      border-radius: 10px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 12px;
+    }
+    .module-icon .ico { width: 22px; height: 22px; stroke-width: 2; }
+    .module:nth-child(1) .module-icon { background: var(--orange-soft); color: var(--orange); }
+    .module:nth-child(2) .module-icon { background: var(--teal-soft); color: var(--teal); }
+    .module:nth-child(3) .module-icon { background: var(--magenta-soft); color: var(--magenta); }
+    .module:nth-child(4) .module-icon { background: var(--green-soft); color: var(--green); }
+    .module h3 {
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 6px;
+      color: var(--ink);
+    }
+    .module p {
+      font-size: 14px;
+      color: var(--ink-mid);
+      line-height: 1.55;
+    }
+
+    /* ==========================================================
+       ROADMAP
+       ========================================================== */
+    .timeline {
+      border-left: 3px solid var(--line);
+      padding-left: 24px;
+      margin-left: 8px;
+    }
+    .timeline-item {
+      position: relative;
+      padding-bottom: 28px;
+    }
+    .timeline-item:last-child { padding-bottom: 0; }
+    .timeline-item::before {
+      content: "";
+      position: absolute;
+      left: -32px;
+      top: 6px;
+      width: 14px; height: 14px;
+      border-radius: 50%;
+      background: white;
+      border: 3px solid var(--orange);
+    }
+    .timeline-item.done::before { background: var(--orange); }
+    .timeline-item.current::before {
+      background: white;
+      border-color: var(--magenta);
+      box-shadow: 0 0 0 4px var(--magenta-soft);
+      animation: pulse-dot 2s ease-in-out infinite;
+    }
+    @keyframes pulse-dot {
+      0%, 100% { box-shadow: 0 0 0 4px var(--magenta-soft); }
+      50% { box-shadow: 0 0 0 10px rgba(184, 59, 201, 0); }
+    }
+    .timeline-item.future::before {
+      background: white;
+      border-color: var(--ink-soft);
+    }
+    .timeline-tag {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--orange);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+    .timeline-item.current .timeline-tag { color: var(--magenta); }
+    .timeline-item.future .timeline-tag { color: var(--ink-soft); }
+    .timeline-item h3 {
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--ink);
+      margin-bottom: 6px;
+    }
+    .timeline-item p {
+      font-size: 14px;
+      color: var(--ink-mid);
+      max-width: 620px;
+      line-height: 1.55;
+    }
+
+    /* ==========================================================
+       GETTING STARTED
+       ========================================================== */
+    .steps {
+      counter-reset: step;
+      list-style: none;
+    }
+    .steps li {
+      counter-increment: step;
+      position: relative;
+      padding: 4px 0 18px 44px;
+      font-size: 15px;
+      color: var(--ink-mid);
+    }
+    .steps li::before {
+      content: counter(step);
+      position: absolute;
+      left: 0; top: 0;
+      width: 28px; height: 28px;
+      background: var(--orange);
+      color: white;
+      border-radius: 50%;
+      font-size: 13px;
+      font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .steps li code {
+      background: var(--bg-soft);
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 13px;
+      color: var(--orange-deep);
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    }
+
+    /* ==========================================================
+       CONTRIBUTE
+       ========================================================== */
+    .contrib-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+    }
+    .contrib {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 12px 14px;
+      background: var(--bg-soft);
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      font-size: 14px;
+    }
+    .contrib-icon {
+      width: 32px; height: 32px;
+      border-radius: 8px;
+      background: var(--orange-soft);
+      color: var(--orange);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .contrib-icon .ico { width: 16px; height: 16px; stroke-width: 2; }
+    .contrib strong {
+      display: block;
+      color: var(--ink);
+      margin-bottom: 2px;
+    }
+    .contrib span {
+      color: var(--ink-soft);
+      font-size: 13px;
+    }
+
+    /* ==========================================================
+       FOOTER
+       ========================================================== */
+    footer {
+      background: var(--bg-soft);
+      padding: 32px 0;
+      font-size: 14px;
+    }
+    .footer-inner {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    footer a {
+      color: var(--ink-mid);
+      text-decoration: none;
+      margin-left: 18px;
+    }
+    footer a:first-child { margin-left: 0; }
+    footer a:hover { color: var(--orange); }
+    .footer-note {
+      color: var(--ink-soft);
+      font-size: 13px;
+    }
+
+    /* ==========================================================
+       RESPONSIVE
+       ========================================================== */
+    @media (max-width: 720px) {
+      nav.main-nav { display: none; }
+      .hero { padding: 60px 0 50px; }
+      section { padding: 50px 0; }
+      .hero-illustration { max-width: 240px; }
+      .modules, .contrib-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="container header-inner">
+    <a href="#" class="brand">
+      <img src="assets/img/logo-mark.png" alt="KleeneStar" class="brand-mark">
+      KleeneStar
+    </a>
+    <nav class="main-nav">
+      <a href="#about">About</a>
+      <a href="#architecture">Architecture</a>
+      <a href="#modules">Modules</a>
+      <a href="#roadmap">Roadmap</a>
+      <a href="#start">Getting Started</a>
+    </nav>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="petal-counter hidden" aria-live="polite" aria-label="Petals collected">
+    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2 L14.5 9 L22 9 L16 13.5 L18.5 21 L12 16.5 L5.5 21 L8 13.5 L2 9 L9.5 9 Z"/></svg>
+    <span class="petal-counter-num">0</span>
+  </div>
+  <div class="hero-petals" aria-hidden="true">
+    <div class="petal p1">
+      <svg viewBox="0 0 20 32" fill="currentColor"><ellipse cx="10" cy="16" rx="7" ry="14"/></svg>
+    </div>
+    <div class="petal p2">
+      <svg viewBox="0 0 20 32" fill="currentColor"><path d="M10 2 Q18 16 10 30 Q2 16 10 2 Z"/></svg>
+    </div>
+    <div class="petal p3">
+      <svg viewBox="0 0 16 16" fill="currentColor"><circle cx="8" cy="8" r="6"/></svg>
+    </div>
+    <div class="petal p4">
+      <svg viewBox="0 0 20 32" fill="currentColor"><ellipse cx="10" cy="16" rx="8" ry="15"/></svg>
+    </div>
+    <div class="petal p5">
+      <svg viewBox="0 0 16 16" fill="currentColor"><circle cx="8" cy="8" r="6"/></svg>
+    </div>
+    <div class="petal p6">
+      <svg viewBox="0 0 20 32" fill="currentColor"><path d="M10 2 Q18 16 10 30 Q2 16 10 2 Z"/></svg>
+    </div>
+  </div>
+  <div class="container hero-inner">
+    <img src="assets/img/hero-illustration.png" alt="KleeneStar - knowledge growing into data" class="hero-illustration">
+    <h1>KleeneStar</h1>
+    <p>Modular web-based on-premises platform for integrated knowledge management, structured process handling, and digital asset management. Built on the WebExpress framework.</p>
+    <div class="hero-ctas">
+      <a href="https://github.com/kleenestar-project" class="btn btn-light">
+        <svg class="btn-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5C5.65.5.5 5.65.5 12c0 5.08 3.29 9.39 7.86 10.91.58.1.79-.25.79-.56 0-.28-.01-1.02-.01-2.01-3.2.69-3.87-1.54-3.87-1.54-.52-1.32-1.27-1.67-1.27-1.67-1.04-.71.08-.7.08-.7 1.15.08 1.76 1.18 1.76 1.18 1.02 1.74 2.68 1.24 3.34.95.1-.74.4-1.24.72-1.53-2.55-.29-5.24-1.28-5.24-5.69 0-1.26.45-2.29 1.18-3.1-.12-.29-.51-1.46.11-3.04 0 0 .97-.31 3.17 1.18a11 11 0 0 1 5.77 0c2.2-1.49 3.16-1.18 3.16-1.18.63 1.58.24 2.75.12 3.04.74.81 1.18 1.84 1.18 3.1 0 4.42-2.7 5.39-5.27 5.68.41.36.78 1.06.78 2.14 0 1.55-.01 2.79-.01 3.17 0 .31.21.67.8.56C20.21 21.39 23.5 17.08 23.5 12 23.5 5.65 18.35.5 12 .5z"/></svg>
+        View on GitHub
+      </a>
+      <a href="#start" class="btn btn-outline">Get started</a>
+    </div>
+  </div>
+</section>
+
+<section id="about">
+  <div class="container">
+    <h2>What is KleeneStar?</h2>
+    <p class="lead">
+      KleeneStar is a web-based application built on the <a href="https://github.com/webexpress-framework" style="color:var(--orange);text-decoration:none;">WebExpress framework</a> that serves as a central platform for knowledge management, project control, and asset management. It is characterized by its modular architecture, high configurability, and seamless interoperability of its components.
+    </p>
+    <p class="lead" style="margin-bottom:0;">
+      The name is derived from the <em>Kleene star</em> of formal language theory, a mathematical operator that enables arbitrary repetition. This metaphor symbolises the platform's core idea: to systematically connect elements (data, objects, modules) and enable flexible composition, so that complex structures and processes can emerge from simple building blocks.
+    </p>
+  </div>
+</section>
+
+<section id="architecture">
+  <div class="container">
+    <h2>Architecture</h2>
+    <p class="lead">
+      KleeneStar follows a <strong>core-plus-modules</strong> model. The Core provides central cross-cutting services (auth, events, search, config). Domain modules implement concrete use cases. Plugins extend modules without modifying them.
+    </p>
+
+    <div class="arch-diagram">
+      <div class="arch-layer">
+        <div class="arch-layer-head">
+          <div>
+            <div class="arch-layer-title">Core</div>
+            <div class="arch-layer-desc">Authentication, Event Bus, IndexManager (Reverse Index), Config, Logging, i18n</div>
+          </div>
+          <div class="arch-layer-chips">
+            <span class="chip">Auth</span>
+            <span class="chip teal">Events</span>
+            <span class="chip magenta">Search</span>
+            <span class="chip">i18n</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="arch-connector">modules consume core services</div>
+
+      <div class="arch-layer">
+        <div class="arch-layer-head">
+          <div>
+            <div class="arch-layer-title">Domain Modules</div>
+            <div class="arch-layer-desc">Knowledge, Process, Asset, Customer Portal - each with its own module core and extension points</div>
+          </div>
+          <div class="arch-layer-chips">
+            <span class="chip">Knowledge</span>
+            <span class="chip teal">Process</span>
+            <span class="chip magenta">Asset</span>
+            <span class="chip green">Portal</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="arch-connector">plugins extend modules</div>
+
+      <div class="arch-layer">
+        <div class="arch-layer-head">
+          <div>
+            <div class="arch-layer-title">Plugins</div>
+            <div class="arch-layer-desc">Third-party or in-house plugins, UI widgets, integrations, custom logic</div>
+          </div>
+          <div class="arch-layer-chips">
+            <span class="chip yellow">Widgets</span>
+            <span class="chip yellow">Connectors</span>
+            <span class="chip yellow">Logic</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="modules">
+  <div class="container">
+    <h2>Modules</h2>
+    <p class="lead">
+      Four deeply integrated modules share the Core's auth, event bus, and search index. Cross-module queries via WQL (WebExpress Query Language) connect them into one coherent system.
+    </p>
+
+    <div class="modules">
+      <div class="module">
+        <div class="module-icon">
+          <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+        </div>
+        <h3>Knowledge Management</h3>
+        <p>Collaborative creation, editing, and organisation of knowledge articles with versioning, comments, and fine-grained access control.</p>
+      </div>
+
+      <div class="module">
+        <div class="module-icon">
+          <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        </div>
+        <h3>Process Management</h3>
+        <p>Record, assign, and track issues, work packages, and tickets. Configurable workflows map any process model. Direct links to articles and assets.</p>
+      </div>
+
+      <div class="module">
+        <div class="module-icon">
+          <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+        </div>
+        <h3>Asset Management</h3>
+        <p>Central repository for documents, images, videos, and code libraries. Versioned, categorised, previewable, linkable with articles and issues.</p>
+      </div>
+
+      <div class="module">
+        <div class="module-icon">
+          <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 11l-3 3-2-2"/></svg>
+        </div>
+        <h3>Customer Portal</h3>
+        <p>Restricted, secure access for external users. Customers see selected articles, tickets, and assets, governed by fine-grained permissions.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="roadmap">
+  <div class="container">
+    <h2>Roadmap</h2>
+    <p class="lead">
+      The roadmap below mirrors the strategic plan from the KleeneStar concept document. The current step is the 0.0.2-alpha release, extending the structural foundation with WebExpress 0.0.11-alpha compatibility. A future step will migrate to WebExpress 2.0.0 for a more modern, performant, and consistent user experience.
+    </p>
+
+    <div class="timeline">
+      <div class="timeline-item done">
+        <span class="timeline-tag">Short Term</span>
+        <h3>Core modules, WQL base language, Identity integration</h3>
+        <p>Knowledge, Process, Asset modules as plugins. External IdPs (LDAP, AD, OpenID Connect, SAML) via IdentityManager. Customer Portal MVP for early feedback.</p>
+      </div>
+
+      <div class="timeline-item done">
+        <span class="timeline-tag">2026 - 0.0.1-alpha</span>
+        <h3>Structural foundation</h3>
+        <p>Workspaces, Classes, Fields, Forms, Statuses, Priorities, Workflows, Objects, Dashboards, configurable, structural, persistent.</p>
+      </div>
+
+      <div class="timeline-item current">
+        <span class="timeline-tag">Current - 0.0.2-alpha</span>
+        <h3>Extending functionality with WebExpress 0.0.11-alpha compatibility</h3>
+        <p>Integrates the new dashboard, kanban, scrum, workflow editor, and formula editor components provided by WebExpress 0.0.11-alpha with the existing structural foundation. The first step beyond the alpha foundation toward interactive, user-facing functionality.</p>
+      </div>
+
+      <div class="timeline-item future">
+        <span class="timeline-tag">Future - WebExpress 2.0.0</span>
+        <h3>Migration to WebExpress 2.0.0 with improved interface</h3>
+        <p>Switch to the next WebExpress generation: modernised UI components, overhauled dashboard engine, optimised data binding, and a more consistent design system across all modules. Once WebExpress 2.0.0 is stable, KleeneStar adapts to it.</p>
+      </div>
+
+      <div class="timeline-item future">
+        <span class="timeline-tag">Medium Term</span>
+        <h3>WQL extensions, audit and compliance, migration tools</h3>
+        <p>Join-like queries, ranking mechanisms, audit logs, compliance features, import/export interfaces for migrating data from existing systems.</p>
+      </div>
+
+      <div class="timeline-item future">
+        <span class="timeline-tag">Long Term</span>
+        <h3>AI integration, real-time collaboration, ecosystem</h3>
+        <p>AI-powered search and recommendations, automatic summaries, real-time editing, official plugin marketplace.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="start">
+  <div class="container">
+    <h2>Getting Started</h2>
+    <p class="lead">
+      KleeneStar is currently at <strong>0.0.1-alpha</strong>, pre-release with structural foundation only. The next milestone is the 0.0.2-alpha release, which integrates with WebExpress 0.0.11-alpha to bring in interactive UI components.
+    </p>
+
+    <ol class="steps">
+      <li>Clone the platform repository: <code>git clone https://github.com/kleenestar-project/KleeneStar.git</code></li>
+      <li>Install dependencies: <code>dotnet restore</code></li>
+      <li>Run with the default SQLite database: <code>dotnet run</code></li>
+      <li>Open <code>http://localhost:5000</code> in your browser</li>
+      <li>Configure external identity providers via <code>IdentityManager</code> (LDAP, AD, OIDC, SAML)</li>
+    </ol>
+  </div>
+</section>
+
+<section id="contribute">
+  <div class="container">
+    <h2>Contribute</h2>
+    <p class="lead">
+      KleeneStar is a private, non-commercial open source project. Contributions in many areas are welcome, from backend code to documentation, design, and community work.
+    </p>
+
+    <div class="contrib-grid">
+      <div class="contrib">
+        <div class="contrib-icon">
+          <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+        </div>
+        <div><strong>C# Backend</strong><span>Plugin development, event system, API design</span></div>
+      </div>
+      <div class="contrib">
+        <div class="contrib-icon">
+          <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>
+        </div>
+        <div><strong>Frontend (JS/TS)</strong><span>UI components, responsive design, accessibility</span></div>
+      </div>
+      <div class="contrib">
+        <div class="contrib-icon">
+          <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+        </div>
+        <div><strong>Testing</strong><span>Manual and automated tests, bug reports</span></div>
+      </div>
+      <div class="contrib">
+        <div class="contrib-icon">
+          <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="13.5" cy="6.5" r="2.5"/><circle cx="19" cy="13" r="2.5"/><circle cx="6" cy="12" r="2.5"/><circle cx="10" cy="20" r="2.5"/></svg>
+        </div>
+        <div><strong>Design</strong><span>Icons, diagrams, UI assets</span></div>
+      </div>
+      <div class="contrib">
+        <div class="contrib-icon">
+          <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        </div>
+        <div><strong>Documentation</strong><span>Architecture texts, translations, tutorials</span></div>
+      </div>
+      <div class="contrib">
+        <div class="contrib-icon">
+          <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        </div>
+        <div><strong>Community</strong><span>Moderating discussions, onboarding, feedback</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="contact">
+  <div class="container">
+    <h2>Contact</h2>
+    <p class="lead">
+      Reach out via email or join the community channels. For bugs and feature requests, please use the GitHub issue tracker.
+    </p>
+    <p style="margin-bottom:8px;">
+      <a href="mailto:kleenestar.project@gmail.com" style="color:var(--orange);text-decoration:none;font-weight:600;">kleenestar.project@gmail.com</a>
+    </p>
+    <p style="margin-bottom:8px;">
+      <a href="https://github.com/kleenestar-project" style="color:var(--orange);text-decoration:none;font-weight:600;">github.com/kleenestar-project</a>
+    </p>
+    <p style="margin-bottom:8px;">
+      <a href="https://kleenestar-project.blogspot.com/" style="color:var(--orange);text-decoration:none;font-weight:600;">Project Blog</a>
+    </p>
+    <p style="margin-bottom:8px;">
+      <a href="https://www.facebook.com/groups/kleenestar/" style="color:var(--orange);text-decoration:none;font-weight:600;">Facebook Community</a>
+    </p>
+  </div>
+</section>
+
+<footer>
+  <div class="container footer-inner">
+    <div>
+      <strong>KleeneStar</strong> - Private, non-commercial open source - MIT License
+    </div>
+    <div>
+      <a href="imprint.html">Imprint</a>
+      <a href="privacy.html">Privacy</a>
+      <span class="footer-note" style="margin-left:18px;">v0.0.1-alpha (in progress: 0.0.2-alpha) - .NET - WebExpress</span>
+    </div>
+  </div>
+</footer>
+
+</body>
+<script>
+(function() {
+  function init() {
+    const basePetals = document.querySelectorAll('.petal');
+    const counter = document.querySelector('.petal-counter-num');
+    const counterContainer = document.querySelector('.petal-counter');
+    const container = document.querySelector('.hero-petals');
+    if (!basePetals.length || !counter || !counterContainer || !container) return;
+
+    // Game state
+    let score = 0;
+    let extraSpawned = 0;
+    const MAX_EXTRAS = 15;
+    const MAX_SCORE = 500;
+    const COOLDOWN_MS = 300;
+    const RESPAWN_MS = 2800;
+    const lastBurstTime = new WeakMap();
+    const freeNextIteration = new WeakSet();
+
+    function updateCounter() {
+      counter.textContent = score;
+      if (score <= 0) {
+        counterContainer.classList.add('hidden');
+      } else {
+        counterContainer.classList.remove('hidden');
+      }
+      counterContainer.classList.remove('pulse');
+      void counterContainer.offsetWidth;
+      counterContainer.classList.add('pulse');
+    }
+
+    function spawnBurstParticles(x, y, color) {
+      const dots = 10;
+      for (let i = 0; i < dots; i++) {
+        const dot = document.createElement('div');
+        dot.className = 'burst-dot';
+        // Horizontal spread only; Y always flies up via keyframe
+        const direction = i % 2 === 0 ? 1 : -1;
+        const distance = 28 + Math.random() * 64;
+        const tx = direction * (distance + (Math.random() - 0.5) * 20);
+        dot.style.setProperty('--tx', tx + 'px');
+        dot.style.left = x + 'px';
+        dot.style.top = y + 'px';
+        dot.style.background = color;
+        document.body.appendChild(dot);
+        dot.addEventListener('animationend', () => dot.remove(), { once: true });
+      }
+    }
+
+    function burst(petal) {
+      const now = Date.now();
+      const last = lastBurstTime.get(petal) || 0;
+      if (now - last < COOLDOWN_MS) return;
+      lastBurstTime.set(petal, now);
+
+      const rect = petal.getBoundingClientRect();
+      const cx = rect.left + rect.width / 2;
+      const cy = rect.top + rect.height / 2;
+      const color = getComputedStyle(petal).color;
+
+      spawnBurstParticles(cx, cy, color);
+
+      // Destroy: hide petal, respawn after delay
+      petal.classList.add('burst');
+      // Mark next animationiteration as free so the user is not penalised
+      // for the loop completing on a petal they already caught
+      freeNextIteration.add(petal);
+      setTimeout(() => petal.classList.remove('burst'), RESPAWN_MS);
+
+      // Destroying a petal rewards +1 (active play)
+      score = Math.min(MAX_SCORE, score + 1);
+      updateCounter();
+      maybeSpawnExtras();
+    }
+
+    function onPetalLoop(petal) {
+      petal.addEventListener('animationiteration', () => {
+        // If this petal was caught, the next iteration is free (no penalty)
+        if (freeNextIteration.has(petal)) {
+          freeNextIteration.delete(petal);
+          return;
+        }
+        // Petal escaped untouched = penalty for missing it
+        score = Math.max(0, score - 1);
+        updateCounter();
+      });
+    }
+
+    function randomShape() {
+      const shapes = [
+        '<svg viewBox="0 0 20 32" fill="currentColor"><ellipse cx="10" cy="16" rx="7" ry="14"/></svg>',
+        '<svg viewBox="0 0 20 32" fill="currentColor"><path d="M10 2 Q18 16 10 30 Q2 16 10 2 Z"/></svg>',
+        '<svg viewBox="0 0 16 16" fill="currentColor"><circle cx="8" cy="8" r="6"/></svg>'
+      ];
+      return shapes[Math.floor(Math.random() * shapes.length)];
+    }
+
+    function spawnExtraPetal() {
+      const petal = document.createElement('div');
+      petal.className = 'petal extra';
+      petal.innerHTML = randomShape();
+      const left = 5 + Math.random() * 90;
+      const width = 18 + Math.random() * 14;
+      const height = width * 1.5;
+      const colors = ['rgba(255,255,255,0.85)', 'var(--teal)', 'var(--yellow)', 'var(--magenta)'];
+      const color = colors[Math.floor(Math.random() * colors.length)];
+      const variant = Math.random() > 0.5 ? 'float-up-2' : 'float-up';
+      const duration = 13 + Math.random() * 9;
+      const delay = Math.random() * 6;
+      petal.style.cssText =
+        'left:' + left + '%;width:' + width + 'px;height:' + height + 'px;' +
+        'color:' + color + ';animation:' + variant + ' ' + duration +
+        's linear infinite ' + delay + 's;';
+      attachPetalHandlers(petal);
+      onPetalLoop(petal);
+      container.appendChild(petal);
+    }
+
+    function maybeSpawnExtras() {
+      if (score <= 100) return;
+      const target = Math.min(MAX_EXTRAS, Math.floor((score - 100) / 25) + 1);
+      while (extraSpawned < target) {
+        spawnExtraPetal();
+        extraSpawned++;
+      }
+    }
+
+    function attachPetalHandlers(petal) {
+      petal.addEventListener('pointerenter', () => burst(petal));
+      petal.addEventListener('click', () => burst(petal));
+    }
+
+    basePetals.forEach(petal => {
+      attachPetalHandlers(petal);
+      onPetalLoop(petal);
+    });
+
+    updateCounter();
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+})();
+</script>
+</html>

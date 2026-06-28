@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Imprint - KleeneStar</title>
+  <meta name="description" content="Legal notice for the KleeneStar project website.">
+  <style>
+    :root {
+      --bg: #ffffff;
+      --bg-soft: #fff8f0;
+      --orange: #f47b20;
+      --orange-dark: #e06812;
+      --orange-deep: #c4580a;
+      --orange-soft: rgba(244, 123, 32, 0.10);
+      --ink: #1a1a1a;
+      --ink-mid: #4a4a4a;
+      --ink-soft: #767676;
+      --line: #f0e6d6;
+      --line-soft: #faf3e8;
+      --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI",
+                   Roboto, "Helvetica Neue", Arial, sans-serif;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: var(--font-sans);
+      background: var(--bg);
+      color: var(--ink);
+      line-height: 1.65;
+      font-size: 16px;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+    .container {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+    header.site-header {
+      padding: 18px 0;
+      border-bottom: 1px solid var(--line-soft);
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(6px);
+    }
+    .header-inner {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--ink);
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 17px;
+    }
+    .brand-mark { width: 30px; height: 30px; }
+    .back-link {
+      color: var(--ink-mid);
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 500;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .back-link:hover { color: var(--orange); }
+    .back-link svg { width: 14px; height: 14px; }
+    .strip {
+      background: var(--orange);
+      color: white;
+      padding: 48px 0;
+      position: relative;
+      overflow: hidden;
+    }
+    .strip::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse at 20% 50%, var(--orange-dark) 0%, transparent 55%),
+        radial-gradient(ellipse at 80% 50%, var(--orange-deep) 0%, transparent 55%);
+      opacity: 0.4;
+    }
+    .strip-inner { position: relative; z-index: 1; }
+    .strip h1 {
+      font-family: var(--font-sans);
+      font-weight: 800;
+      font-size: clamp(28px, 4vw, 38px);
+      letter-spacing: -0.02em;
+      margin-bottom: 6px;
+    }
+    .strip p {
+      color: rgba(255, 255, 255, 0.92);
+      font-size: 15px;
+      max-width: 560px;
+    }
+    main { padding: 56px 0 80px; }
+    h2 {
+      font-family: var(--font-sans);
+      font-weight: 700;
+      font-size: 18px;
+      color: var(--orange-deep);
+      letter-spacing: -0.005em;
+      margin-top: 36px;
+      margin-bottom: 12px;
+      padding-bottom: 6px;
+      border-bottom: 2px solid var(--orange-soft);
+      display: inline-block;
+    }
+    h2:first-child {
+      margin-top: 0;
+    }
+    p {
+      font-size: 15px;
+      color: var(--ink-mid);
+      margin-bottom: 8px;
+    }
+    a {
+      color: var(--orange);
+      text-decoration: none;
+    }
+    a:hover { text-decoration: underline; }
+    strong { color: var(--ink); }
+    .placeholder {
+      background: var(--orange-soft);
+      color: var(--orange-deep);
+      padding: 1px 6px;
+      border-radius: 4px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 14px;
+      font-weight: 600;
+    }
+    footer {
+      background: var(--bg-soft);
+      padding: 28px 0;
+      font-size: 13px;
+    }
+    .footer-inner {
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+      color: var(--ink-soft);
+    }
+    footer a {
+      color: var(--ink-mid);
+      text-decoration: none;
+      margin-left: 16px;
+    }
+    footer a:hover { color: var(--orange); }
+  </style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="container header-inner">
+    <a href="./index.html" class="brand">
+      <img src="assets/img/logo-mark.png" alt="KleeneStar" class="brand-mark">
+      KleeneStar
+    </a>
+    <a href="./index.html" class="back-link">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+      Back to home
+    </a>
+  </div>
+</header>
+
+<section class="strip">
+  <div class="container strip-inner">
+    <h1>Imprint</h1>
+    <p>Legal notice for the KleeneStar project website.</p>
+  </div>
+</section>
+
+<main>
+  <div class="container">
+
+    <h2>Responsible for the content</h2>
+    <p>
+      KleeneStar, private open-source project<br>
+      Maintainer: <span class="placeholder">René Schwarzer</span><br>
+      Email: <a href="mailto:kleenestar.project@gmail.com">kleenestar.project@gmail.com</a><br>
+      Project page: <a href="https://github.com/kleenestar-project" rel="noopener external">github.com/kleenestar-project</a><br>
+      Postal address: Available upon request where a legitimate interest is demonstrated (in accordance with GDPR Art. 6 (1) (f))
+    </p>
+
+    <h2>Hosting</h2>
+    <p>This site is hosted by GitHub Inc., 88 Colin P Kelly Jr St, San Francisco, CA 94107, USA. See the <a href="privacy.html">privacy notice</a> for details about the data processed during delivery.</p>
+
+    <h2>Liability for content</h2>
+    <p>The content of this site has been prepared with care. We do not accept liability for the accuracy, completeness or timeliness of the information. As a service provider we are responsible for our own content on these pages in accordance with general law. We are however not obliged to monitor third-party information transmitted or stored, or to investigate circumstances that indicate illegal activity. Obligations to remove or block the use of information under general law remain unaffected.</p>
+
+    <h2>Liability for links</h2>
+    <p>This site contains links to external websites operated by third parties. We have no influence over the content of these sites. At the time of linking, no illegal content was identified on the linked pages. A permanent content-related monitoring of linked pages is not reasonable without concrete evidence of a legal infringement. Upon notification of legal infringements we will remove such links immediately.</p>
+
+    <h2>Copyright</h2>
+    <p>The source code of the KleeneStar project is licensed under the MIT license; see the <a href="https://github.com/kleenestar-project/.github/blob/main/LICENSE" rel="noopener external">LICENSE</a> file. Content on this site (texts, images, layout) is, unless otherwise marked, licensed under the same terms.</p>
+
+  </div>
+</main>
+
+<footer>
+  <div class="container footer-inner">
+    <div>&copy; <span id="year"></span> KleeneStar, MIT License</div>
+    <div>
+      <a href="./imprint.html">Imprint</a>
+      <a href="./privacy.html">Privacy</a>
+      <a href="./index.html">Home</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+  document.getElementById('year').textContent = new Date().getFullYear();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,9 @@
+# robots.txt for kleenestar-project.github.io
+# https://www.robotstxt.org/
+
+User-agent: *
+Allow: /
+Disallow: /404.html
+
+# Sitemap
+Sitemap: https://kleenestar-project.github.io/sitemap.xml
